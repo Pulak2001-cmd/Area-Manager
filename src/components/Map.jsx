@@ -17,6 +17,15 @@ function Map(props) {
     }
     const [map, setMap] = React.useState(null)
     const [info, setinfo] = React.useState(false)
+    const [myinfo, setmyinfo] = React.useState(false)
+    const [lat, setLat] = React.useState(0.0)
+    const [lng, setLng] = React.useState(0.0)
+    navigator.geolocation.getCurrentPosition((position) => {
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
+    }, () => {
+        alert('Unable to retrieve your location');
+    });
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: "AIzaSyAiOEixVl4_Xip7RnI-ZmDLT3cXgv3xoYA"
@@ -42,6 +51,7 @@ function Map(props) {
         >
           { /* Child components, such as markers, info windows, etc. */ }
           <Marker position={{lat: address.latitude, lng: address.longitude}} onClick={()=> setinfo(true)}></Marker>
+          <Marker position={{lat: lat, lng: lng}} onClick={()=> setmyinfo(true)}></Marker>
           {info ? <InfoWindow position={{lat: address.latitude, lng: address.longitude}} onCloseClick={()=> setinfo(false)}>
             <div>
                 <div>Address Line1: {address.address_line1}</div>
@@ -52,6 +62,11 @@ function Map(props) {
                 <div>State: {address.state}</div>
             </div>
           </InfoWindow>: <></>}
+          {myinfo && <InfoWindow position={{lat: lat, lng: lng}} onCloseClick={()=> setmyinfo(false)}>
+            <div>
+                My Current Location
+            </div>
+          </InfoWindow>}
         </GoogleMap>
         </>
     ) : <></>
