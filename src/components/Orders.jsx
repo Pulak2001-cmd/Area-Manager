@@ -52,6 +52,7 @@ export class Orders extends Component {
   }
   reload = async ()=> {
     console.log('reload');
+    this.setState({pending: [], ongoing: [], completed: [], canceled: []})
     const token = localStorage.getItem('authtoken');
     console.log(token);
     var header = {
