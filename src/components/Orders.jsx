@@ -16,6 +16,9 @@ export class Orders extends Component {
   async componentDidMount() {
     const token = localStorage.getItem('authtoken');
     console.log(token);
+    if(token === null) {
+      this.props.navigate('/');
+    }
     var header = {
       authtoken: token,
     }
@@ -38,6 +41,9 @@ export class Orders extends Component {
     }
     console.log(body)
     const response = await axios.post('https://putatoetest-k3snqinenq-uc.a.run.app/v1/api/orders_manager', body, { headers:  header})
+    if (response.status === 400){
+      this.props.navigate('/');
+    }
     console.log(response.data.pending_orders);
     this.setState({pending: response.data.pending_orders});
     this.setState({ongoing: response.data.ongoing_orders});

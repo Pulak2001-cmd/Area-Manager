@@ -7,6 +7,8 @@ export class Order extends Component {
     this.state = {
       item: false,
       change: false,
+      providers: [],
+      index: -1,
     }
   }
   componentDidMount(){
@@ -56,6 +58,20 @@ export class Order extends Component {
     localStorage.setItem('address', JSON.stringify(address));
     this.props.navigate('/map', {address: address});
   }
+  showItem = async(product_id, sub_service_id, index)=> {
+    console.log('showItem');
+    const token = localStorage.getItem('authtoken');
+    console.log(token);
+    var header = {
+        authtoken: token,
+    }
+    const body = {
+      product_id: product_id,
+      sub_service_id: sub_service_id
+    }
+    const response = await axios.post('https://putatoetest-k3snqinenq-uc.a.run.app/v1/api/ServiceProviderListForProduct', body, {headers: header});
+    this.setState({providers: response.data.lists, index: index});
+  }
   render() {
     return (
         <div class="card" style={{width: '38rem', margin: 10}}>
@@ -65,7 +81,7 @@ export class Order extends Component {
           <h6 class="card-subtitle mb-2 text-muted">Username: {this.props.order.username}</h6>
           <h6 class="card-subtitle mb-2 text-muted">Mobile: {this.props.order.phone}</h6>
           <p class="card-text">Order Date: {this.props.order.datetime}</p>
-          <a href="#" class="card-link" onClick={()=> this.setState({item: !this.state.item})}>View Items</a>
+          <a class="card-link" onClick={()=> this.setState({item: !this.state.item})} style={{cursor: 'pointer'}}>View Items</a>
           <a href="#" class="card-link" onClick={()=> this.viewAddress(this.props.order.address)}>View Address</a>
           {this.props.status && <a href="#" class="card-link" onClick={()=> {this.setState({change: true})}}>Change Status</a>}
           {this.state.change &&
@@ -76,12 +92,33 @@ export class Order extends Component {
             </div>
           }
           {this.state.item && this.props.order.items.map((i, index)=> {
-            return <div style={{border: '1px solid skyblue', padding: 5, borderRadius: 8, margin: 5}}>
+            return <div key={index} style={{border: '1px solid skyblue', padding: 5, borderRadius: 8, margin: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
+              <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
+              <div>
               <li style={{listStyleType: 'None'}}>Brand: {i.brand}</li>
               <li style={{listStyleType: 'None'}}>Name: {i.name}</li>
               <li style={{listStyleType: 'None'}}>Pieces: {i.pcs}</li>
               <li style={{listStyleType: 'None'}}>Price: {i.price}</li>
               <li style={{listStyleType: 'None'}}>Quantity: {i.qty}</li>
+              </div>
+              <img src={i.image} height={100} width={100} style={{marginLeft: 50}}/>
+              </div>
+              <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex', cursor: 'pointer', margin: 4}} onClick={()=> this.showItem(i.product_id, i.sub_service_id, index)}>
+              <p style={{listStyleType: 'None', backgroundColor: '#28a4de', borderRadius: 8, color:'#FFF', width: 200, padding: 4}}>Available ServiceProvider</p>
+              </div>
+              {this.state.index == index && this.state.providers.map((i, index)=> {
+                return <div key={index} style={{padding: 5, border: '1px solid #28a4df', borderRadius: 8, width: 300, margin: 5}}>
+                  <h2 style={{color: '#32a852'}}>{i.name}</h2>
+                  <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
+                  <img src={i.image} height={100} width={100} />
+                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                  <h6>Rating: {i.rating}</h6>
+                  </div>
+                  </div>
+                  <p style={{color: '#28a23f'}}>Phone: {i.phone}</p>
+                  <p style={{color: '#28a4ca', cursor: 'pointer'}} onClick={()=> this.viewAddress(i.address)}>View Address</p>
+                  </div>
+              })}
             </div>
           })}
         </div>

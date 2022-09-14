@@ -7,6 +7,13 @@ function Login() {
   const [email, setemail] = React.useState("");
   const [password, setpassword] = React.useState("");
   const navigate = useNavigate();
+  React.useEffect(() => {
+    const token = localStorage.getItem('authtoken');
+    if (token !== null) {
+        navigate('/home');
+    }
+  })
+  
   const submit = async ()=> {
     if(email === ''){
         alert("Please Enter Valid User ID")
@@ -25,7 +32,7 @@ function Login() {
                 alert(res.error)
             } else {
                 localStorage.setItem('authtoken', res.token);
-                navigate('/home', {hello: 'hi'});
+                navigate('/home');
             }
         }
     }
