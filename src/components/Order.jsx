@@ -103,16 +103,18 @@ export class Order extends Component {
               </div>
               <img src={i.image} height={100} width={100} style={{marginLeft: 50}}/>
               </div>
+              {this.props.type === 'pending' || this.props.type === 'cancelled' &&
               <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex', cursor: 'pointer', margin: 4}} onClick={()=> this.showItem(i.product_id, i.sub_service_id, index)}>
               <p style={{listStyleType: 'None', backgroundColor: '#28a4de', borderRadius: 8, color:'#FFF', width: 200, padding: 4}}>Available ServiceProvider</p>
-              </div>
+              </div>}
               {this.state.index == index && this.state.providers.map((i, index)=> {
                 return <div key={index} style={{padding: 5, border: '1px solid #28a4df', borderRadius: 8, width: 300, margin: 5}}>
                   <h2 style={{color: '#32a852'}}>{i.name}</h2>
                   <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
                   <img src={i.image} height={100} width={100} />
-                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
                   <h6>Rating: {i.rating}</h6>
+                  <div style={{backgroundColor: '#e32619', color: '#FFF', padding: 5, borderRadius: 6, cursor: 'pointer'}}>Choose</div>
                   </div>
                   </div>
                   <p style={{color: '#28a23f'}}>Phone: {i.phone}</p>

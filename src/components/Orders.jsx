@@ -99,7 +99,7 @@ export class Orders extends Component {
           <img src="https://putatoeapp.web.app/img/cart/noOrders.png" height={400} width={400}/>
           }
           {this.state.pending.map((i, index)=> {
-            return <Order navigate={this.props.navigate} key={index} order={i} status={true} confirm={true} cancel={true} complete={false}/>
+            return <Order type={'pending'} navigate={this.props.navigate} key={index} order={i} status={true} confirm={true} cancel={true} complete={false}/>
           })}
         </div>}
         {this.state.visible === 'ongoing' &&
@@ -108,7 +108,7 @@ export class Orders extends Component {
           <img src="https://putatoeapp.web.app/img/cart/noOrders.png" height={400} width={400}/>
           }
           {this.state.ongoing.map((i, index) =>{
-            return <Order navigate={this.props.navigate} key={index} order={i} status={true} confirm={false} cancel={true} complete={true}/>
+            return <Order type={'ongoing'} navigate={this.props.navigate} key={index} order={i} status={true} confirm={false} cancel={true} complete={true}/>
           })}
         </div>}
         {this.state.visible === 'completed' &&
@@ -117,7 +117,7 @@ export class Orders extends Component {
           <img src="https://putatoeapp.web.app/img/cart/noOrders.png" height={400} width={400}/>
           }
          { this.state.completed.map((i, index) =>{
-            return <Order navigate={this.props.navigate} key={index} order={i} status={false} confirm={false} cancel={false} complete={false}/>
+            return <Order type={'completed'} navigate={this.props.navigate} key={index} order={i} status={false} confirm={false} cancel={false} complete={false}/>
           })}
         </div>}
         {this.state.visible === 'cancelled' &&
@@ -126,7 +126,7 @@ export class Orders extends Component {
           <img src="https://putatoeapp.web.app/img/cart/noOrders.png" height={400} width={400}/>
           }
          {this.state.cancelled.map((i, index) =>{
-            return <Order navigate={this.props.navigate} key={index} order={i} status={false} confirm={false} cancel={false} complete={false}/>
+            return <Order type={'cancelled'} navigate={this.props.navigate} key={index} order={i} status={false} confirm={false} cancel={false} complete={false}/>
           })}
         </div>}
       </div>
