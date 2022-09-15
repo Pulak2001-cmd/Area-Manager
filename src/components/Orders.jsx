@@ -10,6 +10,8 @@ export class Orders extends Component {
       ongoing: [],
       completed: [],
       cancelled: [],
+      final_cancelled: [],
+      Allted_to_ServiceProvider: [],
       visible: 'pending',
     }
   }
@@ -46,9 +48,11 @@ export class Orders extends Component {
     }
     console.log(response.data.pending_orders);
     this.setState({pending: response.data.pending_orders});
+    this.setState({Allted_to_ServiceProvider: response.data.pending_to_serviceprovider_orders});
     this.setState({ongoing: response.data.ongoing_orders});
     this.setState({completed: response.data.completed_orders});
     this.setState({cancelled: response.data.cancelled_orders});
+    this.setState({final_cancelled: response.data.final_cancelled_orders});
   }
   reload = async ()=> {
     console.log('reload');
@@ -79,9 +83,11 @@ export class Orders extends Component {
     const response = await axios.post('https://putatoetest-k3snqinenq-uc.a.run.app/v1/api/orders_manager', body, { headers:  header})
     console.log(response.data.pending_orders);
     this.setState({pending: response.data.pending_orders});
+    this.setState({Allted_to_ServiceProvider: response.data.pending_to_serviceprovider_orders});
     this.setState({ongoing: response.data.ongoing_orders});
     this.setState({completed: response.data.completed_orders});
     this.setState({cancelled: response.data.cancelled_orders});
+    this.setState({final_cancelled: response.data.final_cancelled_orders});
   }
   render() {
     return (
@@ -89,9 +95,11 @@ export class Orders extends Component {
         <div onClick={this.reload} style={{backgroundColor: 'blue', color: '#FFF', padding: 4, width: 140, borderRadius: 8, margin: 8, cursor: 'pointer'}}>Reload</div>
         <div style={{display: 'flex', flexDirection: 'row'}}>
         <div onClick={()=> this.setState({visible: 'pending'})} style={{backgroundColor: this.state.visible === 'pending' ? '#2d4cb3': null, border: '2px solid #2d4cb3', color: this.state.visible === 'pending'?'#fff': '#2d4cb3', margin: 8, padding: 8, borderRadius: 8, cursor: 'pointer'}}>Pending Orders</div>
+        <div onClick={()=> this.setState({visible: 'Allted_to_ServiceProvider'})} style={{backgroundColor: this.state.visible === 'Allted_to_ServiceProvider' ? '#2d4cb3': null, border: '2px solid #2d4cb3', color: this.state.visible === 'Allted_to_ServiceProvider'?'#fff': '#2d4cb3', margin: 8, padding: 8, borderRadius: 8, cursor: 'pointer'}}>Orders alloted to ServiceProvider</div>
         <div onClick={()=> this.setState({visible: 'ongoing'})} style={{backgroundColor: this.state.visible === 'ongoing' ? '#2d4cb3': null, border: '2px solid #2d4cb3', color: this.state.visible === 'ongoing'?'#fff': '#2d4cb3', margin: 8, padding: 8, borderRadius: 8, cursor: 'pointer'}}>Ongoing Orders</div>
         <div onClick={()=> this.setState({visible: 'completed'})} style={{backgroundColor: this.state.visible === 'completed' ? '#2d4cb3': null, border: '2px solid #2d4cb3', color: this.state.visible === 'completed'?'#fff': '#2d4cb3', margin: 8, padding: 8, borderRadius: 8, cursor: 'pointer'}}>completed Orders</div>
         <div onClick={()=> this.setState({visible: 'cancelled'})} style={{backgroundColor: this.state.visible === 'cancelled' ? '#2d4cb3': null, border: '2px solid #2d4cb3', color: this.state.visible === 'cancelled'?'#fff': '#2d4cb3', margin: 8, padding: 8, borderRadius: 8, cursor: 'pointer'}}>Cancelled Orders</div>
+        <div onClick={()=> this.setState({visible: 'final_cancelled'})} style={{backgroundColor: this.state.visible === 'final_cancelled' ? '#2d4cb3': null, border: '2px solid #2d4cb3', color: this.state.visible === 'final_cancelled'?'#fff': '#2d4cb3', margin: 8, padding: 8, borderRadius: 8, cursor: 'pointer'}}>Final cancelled Orders</div>
         </div>
         {this.state.visible === 'pending' &&
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -100,6 +108,15 @@ export class Orders extends Component {
           }
           {this.state.pending.map((i, index)=> {
             return <Order type={'pending'} navigate={this.props.navigate} key={index} order={i} status={true} confirm={true} cancel={true} complete={false}/>
+          })}
+        </div>}
+        {this.state.visible === 'Allted_to_ServiceProvider' &&
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          {this.state.Allted_to_ServiceProvider.length === 0 &&
+          <img src="https://putatoeapp.web.app/img/cart/noOrders.png" height={400} width={400}/>
+          }
+          {this.state.Allted_to_ServiceProvider.map((i, index)=> {
+            return <Order type={'Allted_to_ServiceProvider'} navigate={this.props.navigate} key={index} order={i} status={true} confirm={true} cancel={true} complete={false}/>
           })}
         </div>}
         {this.state.visible === 'ongoing' &&
@@ -127,6 +144,15 @@ export class Orders extends Component {
           }
          {this.state.cancelled.map((i, index) =>{
             return <Order type={'cancelled'} navigate={this.props.navigate} key={index} order={i} status={false} confirm={false} cancel={false} complete={false}/>
+          })}
+        </div>}
+        {this.state.visible === 'final_cancelled' &&
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          {this.state.final_cancelled.length === 0 &&
+          <img src="https://putatoeapp.web.app/img/cart/noOrders.png" height={400} width={400}/>
+          }
+         {this.state.final_cancelled.map((i, index) =>{
+            return <Order type={'final_cancelled'} navigate={this.props.navigate} key={index} order={i} status={false} confirm={false} cancel={false} complete={false}/>
           })}
         </div>}
       </div>

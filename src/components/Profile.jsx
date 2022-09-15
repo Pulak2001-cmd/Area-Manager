@@ -40,7 +40,7 @@ export class Profile extends Component {
   render() {
     return (
       <>
-      <Navbar />
+      <Navbar navigate={this.props.navigate}/>
       <div style={{display: 'flex', flexDirection: 'row'}}>
       <div style={{display: 'flex', flexDirection: 'column'}}>
       <div style={{display: 'flex', flexDirection: 'row', marginTop: 8}}>

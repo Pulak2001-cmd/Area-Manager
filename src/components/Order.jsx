@@ -11,48 +11,16 @@ export class Order extends Component {
       index: -1,
     }
   }
-  componentDidMount(){
-    console.log(this.props);
-    console.log('hi')
-  }
-  confirmOrder = async(id)=>{
-    console.log(id);
-    const body = {
-        booking_id: id,
-    }
+  finalcancel = async (id) => {
     const token = localStorage.getItem('authtoken');
-    console.log(token);
     var header = {
-        authtoken: token,
+      authtoken: token,
     }
-    const response = await axios.post('https://putatoetest-k3snqinenq-uc.a.run.app/v1/api/confirmOrder', body, { headers:  header});
-    console.log(response.data);
-  }
-  cancelOrder = async(id)=>{
-    console.log(id);
-    const body = {
-        booking_id: id,
+    const data = {
+      booking_id: id,
     }
-    const token = localStorage.getItem('authtoken');
-    console.log(token);
-    var header = {
-        authtoken: token,
-    }
-    const response = await axios.post('https://putatoetest-k3snqinenq-uc.a.run.app/v1/api/cancelOrder', body, { headers:  header});
-    console.log(response.data);
-  }
-  completeOrder = async(id)=>{
-    console.log(id);
-    const body = {
-        booking_id: id,
-    }
-    const token = localStorage.getItem('authtoken');
-    console.log(token);
-    var header = {
-        authtoken: token,
-    }
-    const response = await axios.post('https://putatoetest-k3snqinenq-uc.a.run.app/v1/api/completeOrder', body, { headers:  header});
-    console.log(response.data);
+    const response = await axios.post('https://putatoetest-k3snqinenq-uc.a.run.app/v1/api/final_Cancel_order', data, { headers: header});
+    console.log(response.status);
   }
   viewAddress = (address)=> {
     localStorage.setItem('address', JSON.stringify(address));
@@ -72,6 +40,19 @@ export class Order extends Component {
     const response = await axios.post('https://putatoetest-k3snqinenq-uc.a.run.app/v1/api/ServiceProviderListForProduct', body, {headers: header});
     this.setState({providers: response.data.lists, index: index});
   }
+  choose = async (id)=> {
+    const booking_id = this.props.order.id;
+    const data = {
+      booking_id: booking_id,
+      serviceprovider_id: id,
+    }
+    const token = localStorage.getItem('authtoken');
+    var header = {
+      authtoken: token,
+    }
+    const response = await axios.post('https://putatoetest-k3snqinenq-uc.a.run.app/v1/api/Assign_ServiceProvider', data, {headers: header});
+    console.log(response.data);
+  }
   render() {
     return (
         <div class="card" style={{width: '38rem', margin: 10}}>
@@ -83,13 +64,18 @@ export class Order extends Component {
           <p class="card-text">Order Date: {this.props.order.datetime}</p>
           <a class="card-link" onClick={()=> this.setState({item: !this.state.item})} style={{cursor: 'pointer'}}>View Items</a>
           <a href="#" class="card-link" onClick={()=> this.viewAddress(this.props.order.address)}>View Address</a>
-          {this.props.status && <a href="#" class="card-link" onClick={()=> {this.setState({change: true})}}>Change Status</a>}
-          {this.state.change &&
+          {/* {this.props.status && <a href="#" class="card-link" onClick={()=> {this.setState({change: true})}}>Change Status</a>} */}
+          {/* {this.state.change &&
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 15}}>
               {this.props.confirm &&<div onClick={()=> this.confirmOrder(this.props.order.id)} style={{backgroundColor: '#51b0aa', borderRadius: 8, color: '#FFF', cursor: 'pointer', margin: 5, padding: 6}}>Confirm Order</div>}
               {this.props.complete &&<div onClick={()=> this.completeOrder(this.props.order.id)} style={{backgroundColor: '#51b0aa', borderRadius: 8, color: '#FFF', cursor: 'pointer', margin: 5, padding: 6}}>Complete Order</div>}
               {this.props.cancel &&<div onClick={()=> this.cancelOrder(this.props.order.id)} style={{backgroundColor: '#51b0aa', borderRadius: 8, color: '#FFF', cursor: 'pointer', margin: 5, padding: 6}}>Cancel Order</div>}
             </div>
+          } */}
+          {this.props.type === 'cancelled' && 
+          <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 15}}>
+            <div onClick={()=> this.finalcancel(this.props.order.id)} style={{backgroundColor: '#51b0aa', borderRadius: 8, color: '#FFF', cursor: 'pointer', margin: 5, padding: 6, width: 200}}>Final cancel Order</div>
+          </div>
           }
           {this.state.item && this.props.order.items.map((i, index)=> {
             return <div key={index} style={{border: '1px solid skyblue', padding: 5, borderRadius: 8, margin: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
@@ -103,7 +89,11 @@ export class Order extends Component {
               </div>
               <img src={i.image} height={100} width={100} style={{marginLeft: 50}}/>
               </div>
-              {this.props.type === 'pending' || this.props.type === 'cancelled' &&
+              {this.props.type === 'pending' &&
+              <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex', cursor: 'pointer', margin: 4}} onClick={()=> this.showItem(i.product_id, i.sub_service_id, index)}>
+              <p style={{listStyleType: 'None', backgroundColor: '#28a4de', borderRadius: 8, color:'#FFF', width: 200, padding: 4}}>Available ServiceProvider</p>
+              </div>}
+              {this.props.type === 'cancelled' &&
               <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex', cursor: 'pointer', margin: 4}} onClick={()=> this.showItem(i.product_id, i.sub_service_id, index)}>
               <p style={{listStyleType: 'None', backgroundColor: '#28a4de', borderRadius: 8, color:'#FFF', width: 200, padding: 4}}>Available ServiceProvider</p>
               </div>}
@@ -114,7 +104,7 @@ export class Order extends Component {
                   <img src={i.image} height={100} width={100} />
                   <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
                   <h6>Rating: {i.rating}</h6>
-                  <div style={{backgroundColor: '#e32619', color: '#FFF', padding: 5, borderRadius: 6, cursor: 'pointer'}}>Choose</div>
+                  <div onClick={()=> this.choose(i.serviceprovider_id)} style={{backgroundColor: '#e32619', color: '#FFF', padding: 5, borderRadius: 6, cursor: 'pointer'}}>Choose</div>
                   </div>
                   </div>
                   <p style={{color: '#28a23f'}}>Phone: {i.phone}</p>

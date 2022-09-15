@@ -48,7 +48,7 @@ function Login() {
         <input type="number" className="form-control" id="floatingInput" placeholder="name@example.com" value={email} onChange={(e)=> setemail(parseInt(e.target.value))}/>
         <label for="floatingInput">User ID</label>
         </div>
-        <div className="form-floating">
+        <div className="form-floating my-2">
         <input type="password" className="form-control" id="floatingPassword" placeholder="Password" value={password} onChange={(e)=> setpassword(e.target.value)}/>
         <label for="floatingPassword">Password</label>
         </div>

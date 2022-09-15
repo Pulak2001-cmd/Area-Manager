@@ -30,7 +30,7 @@ function Main(){
     <Routes>
           <Route exact path='/' element={< Login />}></Route>
           <Route exact path='/home' element={<HomePage navigate={navigate}/>}></Route>
-          <Route exact path='/profile' element={<Profile />}></Route>
+          <Route exact path='/profile' element={<Profile navigate={navigate} />}></Route>
           <Route exact path='/map' element={<Map navigate={navigate}/>}></Route>
     </Routes>
   )
