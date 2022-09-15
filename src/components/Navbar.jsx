@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 export class Navbar extends Component {
+  logout=()=> { 
+    console.log("logout");
+    localStorage.removeItem('authtoken');
+    localStorage.removeItem('address');
+    this.props.navigate('/');
+  }
   render() {
     return (
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -18,7 +24,7 @@ export class Navbar extends Component {
                 <Link class="nav-link" to="/profile">My Profile</Link>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Logout</a>
+                <a class="nav-link" style={{cursor: 'pointer'}} onClick={this.logout}>Logout</a>
               </li>
             </ul>
           </div>

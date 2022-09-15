@@ -17,7 +17,7 @@ export class HomePage extends Component {
   render() {
     return (
       <div>
-        <Navbar />
+        <Navbar navigate={this.props.navigate}/>
         <Orders navigate={this.props.navigate}/>
       </div>
     )
