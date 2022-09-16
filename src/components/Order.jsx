@@ -72,6 +72,17 @@ export class Order extends Component {
               {this.props.cancel &&<div onClick={()=> this.cancelOrder(this.props.order.id)} style={{backgroundColor: '#51b0aa', borderRadius: 8, color: '#FFF', cursor: 'pointer', margin: 5, padding: 6}}>Cancel Order</div>}
             </div>
           } */}
+          {this.props.type === 'Allted_to_ServiceProvider' && 
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+              <p>
+              Alloted to:
+              </p>    
+                <div style={{border: '1px solid #51b0aa', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', margin: 7, padding: 5, width: 250}}>
+                  <strong>{this.props.order.serviceprovider.name}</strong>
+                  <img src={this.props.order.serviceprovider.image} height={100} width={100} />
+                </div>
+            </div>
+          }
           {this.props.type === 'cancelled' && 
           <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 15}}>
             <div onClick={()=> this.finalcancel(this.props.order.id)} style={{backgroundColor: '#51b0aa', borderRadius: 8, color: '#FFF', cursor: 'pointer', margin: 5, padding: 6, width: 200}}>Final cancel Order</div>
